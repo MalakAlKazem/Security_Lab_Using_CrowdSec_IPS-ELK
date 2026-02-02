@@ -1,0 +1,12 @@
+type: leaky
+name: custom/http-post-flood
+description: "Ban IP sending excessive POST requests (form spam, API abuse)"
+filter: evt.Meta.http_verb == 'POST'
+groupby: evt.Meta.source_ip
+capacity: 20
+leakspeed: 10s
+blackhole: 5m
+labels:
+  remediation: true
+  service: http
+  behavior: "http:post-flood"

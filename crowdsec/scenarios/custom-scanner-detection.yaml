@@ -1,0 +1,15 @@
+type: leaky
+name: custom/scanner-detection
+description: "Detect rapid path enumeration indicating scanner activity"
+filter: "evt.Meta.http_status in ['200', '301', '302', '401', '403', '404']"
+groupby: evt.Meta.source_ip
+distinct: evt.Meta.http_path
+capacity: 10
+leakspeed: 30s
+blackhole: 4h
+labels:
+  remediation: true
+  service: http
+  behavior: "http:scanner"
+# Triggers when 10+ different paths are accessed within 30s
+

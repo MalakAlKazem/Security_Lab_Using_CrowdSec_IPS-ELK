@@ -1,0 +1,12 @@
+type: leaky
+name: custom/login-bruteforce
+description: "Ban IP with excessive POST requests to login page"
+filter: "(evt.Meta.http_verb == 'POST' and evt.Meta.http_path startsWith '/login') and evt.Meta.http_status in ['401', '403', '405']"
+groupby: evt.Meta.source_ip
+capacity: 5
+leakspeed: 1m
+blackhole: 4h
+labels:
+  remediation: true
+  service: http
+  behavior: "http:bruteforce"

@@ -1,0 +1,20 @@
+type: leaky
+name: custom/sensitive-files
+description: "Ban access attempts to sensitive configuration and backup files"
+filter: |
+  evt.Meta.http_path endsWith '.env' or
+  evt.Meta.http_path endsWith '.git/config' or
+  evt.Meta.http_path endsWith '.sql' or
+  evt.Meta.http_path endsWith '.bak' or
+  evt.Meta.http_path endsWith 'wp-config.php' or
+  evt.Meta.http_path endsWith 'config.php' or
+  evt.Meta.http_path contains '.env.' or
+  evt.Meta.http_path contains 'phpinfo.php'
+groupby: evt.Meta.source_ip
+capacity: 1
+leakspeed: 1h
+blackhole: 6h
+labels:
+  remediation: true
+  service: http
+  behavior: "http:sensitive-files"

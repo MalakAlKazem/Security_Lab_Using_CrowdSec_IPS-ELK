@@ -1,0 +1,25 @@
+type: leaky
+name: custom/sql-injection-simple
+description: "Detect SQL injection attempts via query strings with suspicious patterns"
+filter: |
+  evt.Meta.log_type == 'http_access-log' and (
+    evt.Meta.http_path contains "UNION" or
+    evt.Meta.http_path contains "SELECT" or
+    evt.Meta.http_path contains "DROP" or
+    evt.Meta.http_path contains " OR " or
+    evt.Meta.http_path contains "%20OR%20" or
+    evt.Meta.http_path contains "'--" or
+    evt.Meta.http_path contains "%27--" or
+    evt.Meta.http_path contains "admin'" or
+    evt.Meta.http_path contains "1=1"
+  )
+groupby: evt.Meta.source_ip
+distinct: evt.Meta.http_path
+capacity: 3
+leakspeed: 10s
+blackhole: 4h
+labels:
+  remediation: true
+  service: http
+  behavior: "http:exploit"
+# Detects SQL injection patterns in URL paths and query strings
