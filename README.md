@@ -142,6 +142,4 @@ docker-compose down -v
 
 Feel free to open issues or submit pull requests!
 
-## 📝 License
 
-[Your chosen license]
